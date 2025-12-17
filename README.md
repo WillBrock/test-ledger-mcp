@@ -25,7 +25,7 @@ Add this to your Claude Code MCP config:
       "command": "npx",
       "args": ["-y", "@testledger/mcp"],
       "env": {
-        "TEST_REPORTER_API_KEY": "your-api-key-here"
+        "TEST_LEDGER_API_KEY": "your-api-key-here"
       }
     }
   }
@@ -42,7 +42,7 @@ Once configured, you can ask Claude Code things like:
 
 - "Why is `checkout.spec.js` flaky?"
 - "What tests have been failing the most this week?"
-- "Find all tests with timeout errors"
+- "Show me recent test failures"
 - "Are there any tests that always fail together?"
 
 ### With the /fix-flaky-test command
@@ -71,21 +71,19 @@ The MCP server provides these tools to Claude:
 | Tool | Description |
 |------|-------------|
 | `get_test_history` | Pass/fail/flaky statistics for a test |
-| `get_test_errors` | Error messages and stacktraces, grouped by frequency |
 | `get_failure_patterns` | Time-of-day, browser, and version patterns |
 | `get_correlated_failures` | Tests that fail together (shared setup issues) |
 | `get_flaky_tests` | Project-wide flaky test leaderboard |
 | `get_recent_failures` | Recent failures for quick triage |
 | `get_test_trend` | Failure rate over time |
-| `search_errors` | Full-text search across all errors |
 
 ## Configuration Options
 
 | Environment Variable | Required | Description |
-|---------------------|----------|-------------|
-| `TEST_REPORTER_API_KEY` | Yes | Your API key from the dashboard |
-| `TEST_REPORTER_API_URL` | No | Custom API URL (default: `https://app-api.testledger.dev`) |
-| `TEST_REPORTER_PROJECT_ID` | No | Default project ID to use for queries |
+|--------------------------|-----|------------------------------------------------------------|
+| `TEST_LEDGER_API_KEY`    | Yes | Your API key from the dashboard                            |
+| `TEST_LEDGER_API_URL`    | No  | Custom API URL (default: `https://app-api.testledger.dev`) |
+| `TEST_LEDGER_PROJECT_ID` | No  | Default project ID to use for queries                      |
 
 ### Example with all options
 
@@ -96,8 +94,8 @@ The MCP server provides these tools to Claude:
       "command": "npx",
       "args": ["-y", "@testledger/mcp"],
       "env": {
-        "TEST_REPORTER_API_KEY": "tr_live_abc123",
-        "TEST_REPORTER_PROJECT_ID": "42"
+        "TEST_LEDGER_API_KEY": "tr_live_abc123",
+        "TEST_LEDGER_PROJECT_ID": "42"
       }
     }
   }
