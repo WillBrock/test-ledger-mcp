@@ -1,0 +1,45 @@
+{
+  "name": "@testledger/mcp",
+  "version": "0.0.1",
+  "description": "MCP server for Test Ledger - analyze flaky tests with Claude Code",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "test-reporter-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/willbrock/test-ledger-mcp"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "testing",
+    "flaky-tests",
+    "webdriverio",
+    "e2e-testing"
+  ],
+  "author": "Will Brock",
+  "license": "MIT",
+  "homepage": "https://testledger.dev"
+}
