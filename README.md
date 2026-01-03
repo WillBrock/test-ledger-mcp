@@ -23,7 +23,7 @@ Add this to your Claude Code MCP config:
   "mcpServers": {
     "test-reporter": {
       "command": "npx",
-      "args": ["-y", "@testledger/mcp"],
+      "args": ["-y", "@testledger/mcp@latest"],
       "env": {
         "TEST_LEDGER_API_KEY": "your-api-key-here"
       }
@@ -31,6 +31,8 @@ Add this to your Claude Code MCP config:
   }
 }
 ```
+
+> **Tip:** Using `@latest` ensures you always get the newest version with bug fixes.
 
 ### 3. Restart Claude Code
 
