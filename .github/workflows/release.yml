@@ -1,0 +1,65 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        type: 'choice'
+        default: 'patch'
+        options:
+          - 'patch'
+          - 'minor'
+          - 'major'
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'master'
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: |
+          npm install -g npm@latest
+          npm --version
+
+      - name: Git Setup
+        run: |
+          git config --global user.email "wpbrock@gmail.com"
+          git config --global user.name "Test Ledger MCP Release Bot"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Release (manual)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm run release -- ${{ github.event.inputs.release_type }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Release (auto patch on push)
+        if: github.event_name == 'push'
+        run: npm run release -- patch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
