@@ -269,6 +269,38 @@ const tools: Tool[] = [
       required: ["spec_file"],
     },
   },
+  {
+    name: "get_failure_screenshots",
+    description: "Get screenshots from recent test failures. Returns presigned S3 URLs that can be viewed with the Read tool to see exactly what the UI looked like when the test failed.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        spec_file: {
+          type: "string",
+          description: "The spec file path (e.g., 'login.spec.js')",
+        },
+        test_title: {
+          type: "string",
+          description: "Specific test title to filter by (optional)",
+        },
+        project_id: {
+          type: "number",
+          description: "Project ID to filter by (optional)",
+        },
+        days: {
+          type: "number",
+          description: "Days to look back (default: 7)",
+          default: 7,
+        },
+        limit: {
+          type: "number",
+          description: "Maximum screenshots to return (default: 10)",
+          default: 10,
+        },
+      },
+      required: ["spec_file"],
+    },
+  },
 ];
 
 // Create the server
@@ -323,6 +355,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_test_trend":
         result = await apiCall("/tests/trend", args as Record<string, unknown>);
+        break;
+
+      case "get_failure_screenshots":
+        result = await apiCall("/tests/failure-screenshots", args as Record<string, unknown>);
         break;
 
       default:
