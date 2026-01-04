@@ -177,6 +177,39 @@ const tools: Tool[] = [
     },
   },
   {
+    name: "get_flaky_specs",
+    description: "Get flaky specs from pre-computed materialized view. Faster than get_flaky_tests as it uses cached data refreshed hourly. Returns spec-level flakiness (not individual test level).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        project_id: {
+          type: "number",
+          description: "Project ID to filter by (optional)",
+        },
+        min_flaky_count: {
+          type: "number",
+          description: "Minimum number of flaky occurrences (default: 1)",
+          default: 1,
+        },
+        min_flaky_percent: {
+          type: "number",
+          description: "Minimum flaky percentage to include (default: 10)",
+          default: 10,
+        },
+        min_total_runs: {
+          type: "number",
+          description: "Minimum total runs for statistical significance (default: 1)",
+          default: 1,
+        },
+        limit: {
+          type: "number",
+          description: "Maximum results to return (default: 50)",
+          default: 50,
+        },
+      },
+    },
+  },
+  {
     name: "get_recent_failures",
     description: "Get the most recent test failures for quick triage. Useful for seeing what's currently broken. For faster results, provide a spec_file filter.",
     inputSchema: {
@@ -278,6 +311,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "get_flaky_tests":
         result = await apiCall("/tests/flaky", args as Record<string, unknown>);
+        break;
+
+      case "get_flaky_specs":
+        result = await apiCall("/tests/flaky-specs", args as Record<string, unknown>);
         break;
 
       case "get_recent_failures":
