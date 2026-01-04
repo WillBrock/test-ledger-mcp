@@ -2,6 +2,7 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, } from "@modelcontextprotocol/sdk/types.js";
+// Test Results MCP Server
 // Configuration from environment
 const API_BASE_URL = process.env.TEST_LEDGER_API_URL;
 const API_KEY = process.env.TEST_LEDGER_API_KEY || "";
@@ -256,6 +257,38 @@ const tools = [
             required: ["spec_file"],
         },
     },
+    {
+        name: "get_failure_screenshots",
+        description: "Get screenshots from recent test failures. Returns presigned S3 URLs that can be viewed with the Read tool to see exactly what the UI looked like when the test failed.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                spec_file: {
+                    type: "string",
+                    description: "The spec file path (e.g., 'login.spec.js')",
+                },
+                test_title: {
+                    type: "string",
+                    description: "Specific test title to filter by (optional)",
+                },
+                project_id: {
+                    type: "number",
+                    description: "Project ID to filter by (optional)",
+                },
+                days: {
+                    type: "number",
+                    description: "Days to look back (default: 7)",
+                    default: 7,
+                },
+                limit: {
+                    type: "number",
+                    description: "Maximum screenshots to return (default: 10)",
+                    default: 10,
+                },
+            },
+            required: ["spec_file"],
+        },
+    },
 ];
 // Create the server
 const server = new Server({
@@ -296,6 +329,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 break;
             case "get_test_trend":
                 result = await apiCall("/tests/trend", args);
+                break;
+            case "get_failure_screenshots":
+                result = await apiCall("/tests/failure-screenshots", args);
                 break;
             default:
                 throw new Error(`Unknown tool: ${name}`);
