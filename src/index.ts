@@ -8,6 +8,8 @@ import {
   Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 
+// Test Results MCP Server
+
 // Configuration from environment
 const API_BASE_URL       = process.env.TEST_LEDGER_API_URL;
 const API_KEY            = process.env.TEST_LEDGER_API_KEY || "";
