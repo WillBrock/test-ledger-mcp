@@ -289,6 +289,38 @@ const tools = [
             required: ["spec_file"],
         },
     },
+    {
+        name: "get_consecutive_failures",
+        description: "Get tests that are failing consecutively (broken tests, not flaky). Returns tests where the last 2+ runs have failed, with timing info (last_passed_date, first_failed_date) useful for identifying which merge broke them.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                project_id: {
+                    type: "number",
+                    description: "Project ID to filter by (optional)",
+                },
+                version: {
+                    type: "string",
+                    description: "Version to filter by (e.g., '12.1.0'). If not provided, uses latest version.",
+                },
+                days: {
+                    type: "number",
+                    description: "Days to look back (default: 10)",
+                    default: 10,
+                },
+                min_consecutive_failures: {
+                    type: "number",
+                    description: "Minimum number of consecutive failures to include (default: 2)",
+                    default: 2,
+                },
+                limit: {
+                    type: "number",
+                    description: "Maximum results to return (default: 50)",
+                    default: 50,
+                },
+            },
+        },
+    },
 ];
 // Create the server
 const server = new Server({
@@ -332,6 +364,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 break;
             case "get_failure_screenshots":
                 result = await apiCall("/tests/failure-screenshots", args);
+                break;
+            case "get_consecutive_failures":
+                result = await apiCall("/tests/consecutive-failures", args);
                 break;
             default:
                 throw new Error(`Unknown tool: ${name}`);
