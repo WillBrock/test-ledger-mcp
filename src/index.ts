@@ -66,7 +66,7 @@ async function apiCall<T>(endpoint: string, params: Record<string, unknown> = {}
 const tools: Tool[] = [
   {
     name: "get_test_history",
-    description: "Get historical pass/fail/flaky statistics for a specific test. Use this to understand how often a test fails and its overall reliability.",
+    description: "Get historical pass/fail/flaky statistics for a specific test. Use this to understand how often a test fails and its overall reliability. Returns health_status (healthy/flaky/broken/disabled/insufficient_data) from the test_health view for AI pre-filtering decisions.",
     inputSchema: {
       type: "object",
       properties: {
